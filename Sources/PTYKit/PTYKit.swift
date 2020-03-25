@@ -1,5 +1,5 @@
 import Foundation
-import CPTYFork
+import CPTYKitSupport
 
 public struct PTY {
 	public let masterFileHandle: FileHandle

@@ -1,6 +1,6 @@
 import Foundation
 import Darwin
-import CPTYFork
+import CPTYKitSupport
 
 internal struct ForkReturn {
 	fileprivate init(_ value: pid_t) {
