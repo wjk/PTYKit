@@ -4,7 +4,14 @@ import PTYKit
 do {
 	/// Basic usage.
 	let p = PTY(processPath: "/bin/ls", arguments: ["/bin/ls", "-Gbla"], environment: ["TERM=ansi"])!
-	print(String(data: p.masterFileHandle.readDataToEndOfFile(), encoding: .utf8) ?? "<null>")
+	let output = String(data: p.masterFileHandle.readDataToEndOfFile(), encoding: .utf8) ?? "<null>"
+
+	var index = 0
+	output.enumerateLines { (line, stop) in
+		index += 1
+		print("\(index)\t\(line)")
+	}
+
 	p.waitForChildProcessExit()
 }
 
