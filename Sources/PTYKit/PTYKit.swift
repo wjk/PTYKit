@@ -48,6 +48,8 @@ public extension FileHandle {
 			let observer1 = NotificationCenter.default.addObserver(forName: FileHandle.readCompletionNotification, object: self, queue: OperationQueue.current) { (notification: Notification) in
 				let data = notification.userInfo![NSFileHandleNotificationDataItem] as! Data
 				block(data)
+
+				self.readInBackgroundAndNotify()
 			}
 			var observer2 = observer1 // needed to avoid a compiler error
 			observer2 = NotificationCenter.default.addObserver(forName: Notification.Name.NSFileHandleReadToEndOfFileCompletion, object: self, queue: OperationQueue.current) { (notification: Notification) in
