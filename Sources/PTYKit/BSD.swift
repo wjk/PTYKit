@@ -2,7 +2,7 @@ import Foundation
 import Darwin
 import CPTYFork
 
-public struct ForkReturn {
+internal struct ForkReturn {
 	fileprivate init(_ value: pid_t) {
 		self.value = value
 	}
@@ -17,11 +17,11 @@ public struct ForkReturn {
 	}
 }
 
-public func fork() -> ForkReturn {
+internal func fork() -> ForkReturn {
 	return ForkReturn(PTYKitPerformFork())
 }
 
-public func forkpty() -> (result: ForkReturn, pty: FileHandle)? {
+internal func forkpty() -> (result: ForkReturn, pty: FileHandle)? {
 	var master: Int32 = 0
 	let pid = Darwin.forkpty(&master, nil, nil, nil)
 	if pid == -1 {
@@ -31,7 +31,7 @@ public func forkpty() -> (result: ForkReturn, pty: FileHandle)? {
 	return (ForkReturn(pid), FileHandle(fileDescriptor: master, closeOnDealloc: true))
 }
 
-public func execve(processPath: String, arguments: [String], environment: [String] = []) -> Never {
+internal func execve(processPath: String, arguments: [String], environment: [String] = []) -> Never {
 	processPath.withCString { (pathPtr) in
 		arguments.withCPointerToNullTerminatedArrayOfCStrings { (argvPtr) in
 			environment.withCPointerToNullTerminatedArrayOfCStrings { (envPtr) in
