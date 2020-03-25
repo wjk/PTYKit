@@ -2,21 +2,17 @@ import Foundation
 import PTYKit
 
 do {
-	/// Basic usage.
-	let p = PTY(processPath: "/bin/ls", arguments: ["/bin/ls", "-Gbla"], environment: ["TERM=ansi"])!
-	let output = String(data: p.masterFileHandle.readDataToEndOfFile(), encoding: .utf8) ?? "<null>"
-
-	var index = 0
-	output.enumerateLines { (line, stop) in
-		index += 1
-		print("\(index)\t\(line)")
-	}
-
-	p.waitForChildProcessExit()
-}
-
-do {
-	let pty2 = PTY(processPath: "/bin/zsh", arguments: ["/bin/zsh"], environment: ["TERM=ansi"])!
+	let arguments = [
+		"slapconfig",
+		"-createldapmasterandadmin",
+		"--allow_local_realm",
+		"diradmin",
+		"Directory Administrator",
+		"1024",
+		"DC=sunsol,DC=internal",
+		"SUNSOL.INTERNAL"
+	]
+	let pty2 = PTY(processPath: "/usr/sbin/slapconfig", arguments: arguments, environment: ["TERM=ansi"])!
 	var stopRunLoop = false
 	FileHandle.standardInput.readabilityHandler = { f in
 		let d = f.availableData
@@ -31,6 +27,8 @@ do {
 			stopRunLoop = true
 		}
 	}
+
+	var stringAccumulator = ""
 	pty2.masterFileHandle.readabilityHandler = { f in
 		let d = f.availableData
 		guard d.count > 0 else {
@@ -43,7 +41,14 @@ do {
 		}
 
 		let s = String(data: d, encoding: .utf8)!
-		print(s, terminator: "")
+		stringAccumulator += s
+
+		if stringAccumulator.hasSuffix("Password:") || stringAccumulator.hasSuffix("passphrase:") {
+			pty2.masterFileHandle.write("password123\n")
+			print("\(stringAccumulator) ••••••••", terminator: "")
+		} else {
+			print(s, terminator: "")
+		}
 	}
 
 	while !stopRunLoop {
