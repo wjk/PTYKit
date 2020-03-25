@@ -9,7 +9,7 @@ public struct PTY {
 		precondition(arguments.count >= 1, "arguments[0] must exist")
 		precondition(processPath.hasSuffix(arguments[0]), "arguments[0] must be filename of process")
 
-		if let (forkResult, fileHandle) = forkWithPTY() {
+		if let (forkResult, fileHandle) = forkpty() {
 			if forkResult.isParent {
 				masterFileHandle = fileHandle
 				childProcessID = forkResult.childProcessID

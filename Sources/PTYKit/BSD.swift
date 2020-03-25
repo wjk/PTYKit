@@ -21,9 +21,9 @@ public func fork() -> ForkReturn {
 	return ForkReturn(PTYKitPerformFork())
 }
 
-public func forkWithPTY() -> (result: ForkReturn, pty: FileHandle)? {
+public func forkpty() -> (result: ForkReturn, pty: FileHandle)? {
 	var master: Int32 = 0
-	let pid = forkpty(&master, nil, nil, nil)
+	let pid = Darwin.forkpty(&master, nil, nil, nil)
 	if pid == -1 {
 		return nil
 	}
