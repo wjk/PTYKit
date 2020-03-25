@@ -31,8 +31,12 @@ do {
 	pty2.masterFileHandle.readabilityHandler = { f in
 		let d = f.availableData
 		guard d.count > 0 else {
-			print("end of file, exiting now")
-			exit(0)
+			if !stopRunLoop {
+				print("end of file, exiting now")
+			}
+
+			stopRunLoop = true
+			return
 		}
 
 		let s = String(data: d, encoding: .utf8)!
