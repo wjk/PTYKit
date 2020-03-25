@@ -9,10 +9,6 @@ do {
 }
 
 do {
-	///
-	/// This runs infinite REPL loop.
-	/// You can test this program with Xcode console.
-	///
 	let pty2 = PTY(processPath: "/bin/zsh", arguments: ["/bin/zsh"], environment: ["TERM=ansi"])!
 	var stopRunLoop = false
 	FileHandle.standardInput.readabilityHandler = { f in
