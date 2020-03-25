@@ -6,7 +6,7 @@ public struct PTY {
 	public let childProcessID: pid_t
 
 	public init?(processPath: String, arguments: [String], environment: [String] = []) {
-		precondition(arguments.count >= 1)
+		precondition(arguments.count >= 1, "arguments[0] must exist")
 		precondition(processPath.hasSuffix(arguments[0]), "arguments[0] must be filename of process")
 
 		if let (forkResult, fileHandle) = forkWithPTY() {
