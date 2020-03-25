@@ -36,7 +36,7 @@ do {
 		}
 
 		let s = String(data: d, encoding: .utf8)!
-		print(s)
+		print(s, terminator: "")
 	}
 
 	while !stopRunLoop {
