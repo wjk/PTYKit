@@ -24,9 +24,16 @@ public struct PTY {
 		}
 	}
 
-	public func waitForChildProcessExit() {
-		var stat: Int32 = 0
-		_ = waitpid(childProcessID, &stat, 0)
+	@discardableResult
+	public func waitForChildProcessExit() -> Int? {
+		var waitCode: Int32 = 0
+		_ = waitpid(childProcessID, &waitCode, 0)
+
+		if PTYKitDoesWaitCodeSpecifyNormalExit(waitCode) != 0 {
+			return Int(PTYKitGetExitCodeFromWaitCode(waitCode))
+		} else {
+			return nil
+		}
 	}
 }
 
