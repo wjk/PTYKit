@@ -17,10 +17,6 @@ internal struct ForkReturn {
 	}
 }
 
-internal func fork() -> ForkReturn {
-	return ForkReturn(PTYKitPerformFork())
-}
-
 internal func forkpty() -> (result: ForkReturn, pty: FileHandle)? {
 	var master: Int32 = 0
 	let pid = Darwin.forkpty(&master, nil, nil, nil)
