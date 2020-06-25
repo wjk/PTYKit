@@ -9,9 +9,9 @@ public struct PTY {
 		precondition(arguments.count >= 1, "arguments[0] must exist")
 		precondition(processPath.hasSuffix(arguments[0]), "arguments[0] must be filename of process")
 
-		if let (forkResult, fileHandle) = forkpty() {
+		if let (forkResult, masterFD) = forkpty() {
 			if forkResult.isParent {
-				masterFileHandle = fileHandle
+				masterFileHandle = FileHandle(fileDescriptor: masterFD, closeOnDealloc: true)
 				childProcessID = forkResult.childProcessID
 			} else {
 				execve(processPath: processPath, arguments: arguments, environment: environment)

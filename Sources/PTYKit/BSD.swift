@@ -17,14 +17,14 @@ internal struct ForkReturn {
 	}
 }
 
-internal func forkpty() -> (result: ForkReturn, pty: FileHandle)? {
-	var master: Int32 = 0
-	let pid = Darwin.forkpty(&master, nil, nil, nil)
+internal func forkpty() -> (result: ForkReturn, pty: Int32)? {
+	var masterFD: Int32 = 0
+	let pid = Darwin.forkpty(&masterFD, nil, nil, nil)
 	if pid == -1 {
 		return nil
 	}
 
-	return (ForkReturn(pid), FileHandle(fileDescriptor: master, closeOnDealloc: true))
+	return (ForkReturn(pid), masterFD)
 }
 
 internal func execve(processPath: String, arguments: [String], environment: [String] = []) -> Never {
